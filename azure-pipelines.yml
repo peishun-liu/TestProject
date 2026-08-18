@@ -8,7 +8,7 @@ trigger: none
 resources:
   webhooks:
     - webhook: BugUpdateWebHook
-      connection: IncomingWebHookConnectionName
+      connection: IncomingWebhookConnection
 
 parameters:
   - name : BugUpdateWebHook
