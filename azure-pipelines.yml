@@ -36,39 +36,39 @@ steps:
     echo "$CLEAN_TEXT"
 
     REQUEST=$(jq -n \
-      --arg prompt "あなたはプロフェッショナルなソフトウェアエンジニアです。
-          以下のAzure DevOps Bugを分析してください。Repro Stepsの中に中国語が含まれているか判定してください。
+      --arg prompt "你是一名精通日语和各种开发语言的软件领域的专家。
+          请判断 Repro Steps 中是否包含中文内容。
           Bug ID: $BUG_ID
           Repro Steps:
           $CLEAN_TEXT
           
-          以下のJSON形式で返してください。
+          
+          特别注意：
+          - 只要 Repro Steps 中出现中文词语或中文句子，就将 is_chinese 设置为 true。
+          - 日文中的汉字不能单独作为中文判断依据。
+          - 如果同时存在日文和中文，只要存在中文，就设置为 true。
+
+          请严格按照以下 JSON 格式返回：
 
           {
-            \"summary\": \"バグの概要\",
-            \"language\": \"Repro Stepsの言語\",
+            \"summary\": \"Bug的简短概要\",
+            \"language\": \"Repro Steps的主要语言\",
             \"is_chinese\": false,
             \"is_repro_steps_clear\": true,
             \"missing_information\": [],
             \"suggested_action\": \"none\"
           }
 
-          ルール：
-          Repro Stepsの中に中国語が含まれているか判定してください。
-          - 中国語が含まれている場合は is_chinese を true にしてください。
-          - 中国語が含まれていない場合は is_chinese を false にしてください。
-          - 日本語に含まれる漢字だけでは中国語と判定しないでください。
-          - JSONのキーは英語のままにしてください。
-          - JSONの値は日本語で記述してください。
-          - summaryはバグの概要を簡潔に記述してください。
-          - languageにはRepro Stepsの言語を記述してください。
-          - is_repro_steps_clearはtrueまたはfalseにしてください。
-          - missing_informationは文字列の配列にしてください。
-          - suggested_actionは推奨アクションを記述してください。
-          - Markdownを使用しないでください。
-          - コードブロックを使用しないでください。
-          - JSONのみを返してください。
-          - 回答は簡潔にしてください。" \
+
+          要求：
+          - is_chinese 必须是 true 或 false。
+          - is_repro_steps_clear 必须是 true 或 false。
+          - missing_information 必须是字符串数组。
+          - JSON 的 key 必须保持英文。
+          - 不要返回 Markdown。
+          - 不要返回代码块。
+          - 只返回 JSON。
+          - 不要添加任何额外说明。" \
             '{
               prompt: $prompt,
               max_tokens: 500
