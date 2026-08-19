@@ -36,39 +36,56 @@ steps:
     echo "$CLEAN_TEXT"
 
     REQUEST=$(jq -n \
-      --arg prompt "あなたはプロフェッショナルなソフトウェアエンジニアです。
-          以下のAzure DevOps Bugを分析してください。
-          Repro Stepsの中に中国語が含まれているか判定してください。
+      --arg prompt "あなたはプロフェッショナルなソフトウェアテストエンジニアです。
 
-          Bug ID: $BUG_ID
-          Repro Steps:
-          $CLEAN_TEXT
-          
-          すべての回答を日本語で返してください。
+    以下のAzure DevOps Bugを分析してください。
 
-          以下のJSON形式で返してください。
+    Bug ID：
+    $BUG_ID
 
-          {
-            \"has_chinese\": false,
-            \"chinese_Text\": \"中国語の内容\"
-          }
+    Repro Steps：
+    $CLEAN_TEXT
 
-          ルール：
-          - JSONのキーは英語のままにしてください。
-          - JSONの値は日本語で記述してください。
-          - 中国語が含まれている場合は has_chinese を true にしてください。
-          - 中国語が含まれていない場合は has_chinese を false にしてください。
-          - 日本語に含まれる漢字だけでは中国語と判定しないでください。
-          - chinese_Textは中国語の内容を記述してください。
-          - Markdownを使用しないでください。
-          - コードブロックを使用しないでください。
-          - JSONのみを返してください。
-          - 回答は簡潔にしてください。" \
-            '{
-              prompt: $prompt,
-              max_tokens: 500
-            }'
-        )
+    Repro Stepsの中に中国語が含まれているか判定してください。
+
+    重要なルール：
+    - Repro Stepsの中に中国語の単語または中国語の文章が1つでも含まれている場合、has_chineseをtrueにしてください。
+    - 中国語を検出した場合、検出した中国語の文字、単語、または文章をchinese_textにすべて記載してください。
+    - 中国語が含まれていない場合、has_chineseをfalseにしてください。
+    - 中国語が含まれていない場合、chinese_textは空の配列にしてください。
+    - 日本語の漢字だけでは中国語と判定しないでください。
+    - 日本語と中国語が混在している場合、中国語が1つでも含まれていればhas_chineseはtrueです。
+    - 例えば「バグを新作成する時、XXX入力不可、测试」の場合、「测试」は中国語なので、has_chineseはtrue、chinese_textには「测试」を入れてください。
+
+    以下のJSON形式で必ず回答してください。
+
+    {
+      \"summary\": \"Bugの概要\",
+      \"language\": \"Repro Stepsの主要な言語\",
+      \"has_chinese\": false,
+      \"chinese_text\": [],
+      \"is_repro_steps_clear\": true,
+      \"missing_information\": [],
+      \"suggested_action\": \"none\"
+    }
+
+    回答ルール：
+    - has_chineseは必ずtrueまたはfalseにしてください。
+    - has_chineseがtrueの場合、chinese_textに検出した中国語を記載してください。
+    - has_chineseがfalseの場合、chinese_textは必ず空の配列にしてください。
+    - is_repro_steps_clearは必ずtrueまたはfalseにしてください。
+    - missing_informationは文字列の配列にしてください。
+    - JSONのキーは英語のままにしてください。
+    - JSONの値は日本語で記述してください。
+    - Markdownは使用しないでください。
+    - コードブロックは使用しないでください。
+    - JSONのみを返してください。
+    - JSON以外の説明は一切追加しないでください。" \
+      '{
+        prompt: $prompt,
+        max_tokens: 500
+      }'
+    )
 
     echo "========================================"
     echo "Request"
