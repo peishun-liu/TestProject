@@ -55,6 +55,20 @@ steps:
       - 中国語が含まれていない場合、chinese_textは空の配列にしてください。
       - 日本語の漢字だけでは中国語と判定しないでください。
       - 日本語と中国語が混在している場合、中国語が1つでも含まれていればhas_chineseはtrueです。
+
+      以下のJSON形式で必ず回答してください。
+
+      {
+        \"summary\": \"Bugの概要\",
+        \"language\": \"Repro Stepsの主要な言語\",
+        \"has_chinese\": false,
+        \"chinese_text\": [],
+        \"is_repro_steps_clear\": true,
+        \"missing_information\": [],
+        \"suggested_action\": \"none\"
+      }
+
+      回答ルール：
       - has_chineseは必ずtrueまたはfalseにしてください。
       - has_chineseがtrueの場合、chinese_textに検出した中国語を記載してください。
       - has_chineseがfalseの場合、chinese_textは必ず空の配列にしてください。
@@ -70,20 +84,6 @@ steps:
           prompt: $prompt,
           max_tokens: 500
         }'
-
-      以下のJSON形式で必ず回答してください。
-
-      {
-        \"summary\": \"Bugの概要\",
-        \"language\": \"Repro Stepsの主要な言語\",
-        \"has_chinese\": false,
-        \"chinese_text\": [],
-        \"is_repro_steps_clear\": true,
-        \"missing_information\": [],
-        \"suggested_action\": \"none\"
-      }
-
-      
     )
 
     echo "========================================"
