@@ -67,8 +67,30 @@ steps:
  
     echo "Has Chinese: $HAS_CHINESE"
     echo "Chinese Text: $CHINESE_TEXT"
- 
-    
-    
+
+    if [ "$HAS_CHINESE" = "true" ]; then
+
+      echo "Chinese detected"
+
+      curl --fail-with-body \
+        -sS \
+        -X PATCH \
+        "https://dev.azure.com/qualica-sbu/TestGERP/_apis/wit/workitems/${BUG_ID}?api-version=7.1" \
+        -H "Content-Type: application/json-patch+json" \
+        -H "Authorization: Bearer ${SYSTEM_ACCESSTOKEN}" \
+        -d '[
+          {
+            "op": "add",
+            "path": "/fields/System.Tags",
+            "value": "ChineseDetected"
+          }
+        ]'
+
+    else
+      echo "No Chinese detected."
+    fi
+
+  env:
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
  
   displayName: 'Analyze Bug with DevToolBox AI'
