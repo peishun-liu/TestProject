@@ -1,74 +1,58 @@
 trigger: none
-
+ 
 pr: none
-
+ 
 resources:
   webhooks:
     - webhook: BugUpdateWebHook
       connection: IncomingWebhookConnection
-
+ 
 pool:
   vmImage: ubuntu-latest
-
-
-
+ 
 steps:
-
+ 
 - bash: |
     set -e
-
+ 
     BUG_ID="${{ parameters.BugUpdateWebHook.resource.workItemId }}"
     REPRO_STEPS='${{ parameters.BugUpdateWebHook.resource.revision.fields['Microsoft.VSTS.TCM.ReproSteps'] }}'
     CLEAN_TEXT=$(printf '%s' "$REPRO_STEPS" | sed 's/<[^>]*>/ /g')
-
+ 
     echo "========================================"
     echo "入力内容："
     echo "========================================"
     echo "$CLEAN_TEXT"
-
+ 
     REQUEST=$(jq -n \
       --arg prompt "あなたはプロフェッショナルなソフトウェアエンジニアです。
-
+ 
       Bug ID：
       $BUG_ID
-
+ 
       Repro Steps：
       $CLEAN_TEXT
-
+ 
       Repro Stepsの中に中国語が含まれているか判定してください。
-
-      判定方法：
-
-        最も重要な点は、「漢字が存在する」ことと「中国語が存在する」ことは同じではないということです。
-        日本語も大量の漢字を使用するため、漢字だけを理由に中国語と判定してはいけません。
-        以下の情報を総合的に判断してください。
-          中国語特有の単語や表現が存在するか確認してください。
-          日本語特有のひらがな・カタカナ・文法が存在するか確認してください。
-            例：
-              「です」「ます」「した」「して」「する」「ない」「から」「ので」「入力した」「押すと」など。
-          漢字の組み合わせと文章全体の文法・文脈を確認してください。
-          日本語の文章の中に日本語として使用されている漢字があるだけの場合、中国語とは判定しないでください。
-            例：
-              「入力した後、ボタンを押すと、異常終了。」
-                日本語
-                has_chinese = false
-        中国語が含まれている場合、has_chineseをtrueにしてください。
-        中国語がない場合、chinese_textは空の配列にしてください。
+      
+      ルール：
+      - 中国語が含まれている場合、has_chineseをtrueにしてください。
+      - 中国語がない場合、chinese_textは空の配列にしてください。
       
       必ず以下のJSON形式だけを返してください。
-
+ 
       {
         \"has_chinese\": false,
         \"chinese_text\": []
       }
-
+ 
       JSON以外の文章は絶対に返さないでください" \
         '{
           prompt: $prompt,
           max_tokens: 500
         }'
     )
-
+ 
     curl --fail-with-body \
       -sS \
       -X POST \
@@ -76,12 +60,15 @@ steps:
       -H "Content-Type: application/json" \
       -d "$REQUEST" \
       -o ai-response.json
-
+ 
     AI_RESULT=$(cat ai-response.json | jq -r '.response')
     HAS_CHINESE=$(echo "$AI_RESULT" | jq -r '.has_chinese')
     CHINESE_TEXT=$(echo "$AI_RESULT" | jq -c '.chinese_text')
-
+ 
     echo "Has Chinese: $HAS_CHINESE"
     echo "Chinese Text: $CHINESE_TEXT"
-
+ 
+    
+    
+ 
   displayName: 'Analyze Bug with DevToolBox AI'
