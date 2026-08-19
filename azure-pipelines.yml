@@ -19,8 +19,13 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- bash: |
+    echo "Bug ID:"
+    echo "${{ parameters.BugUpdateWebHook.resource.workItemId }}"
+
+    echo "Repro Steps:"
+    echo "${{ parameters.BugUpdateWebHook.resource.revision.fields['Microsoft.VSTS.TCM.ReproSteps'] }}"
+  displayName: 'Get Bug Repro Steps'
 
 - script: |
     echo Add other tasks to build, test, and deploy your project.
