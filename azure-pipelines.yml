@@ -98,8 +98,6 @@ steps:
         echo "No Chinese detected."
 
     fi
-
-    env:
+  env:
       SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-    
   displayName: 'Analyze Bug with DevToolBox AI'
