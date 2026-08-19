@@ -10,6 +10,8 @@ resources:
 pool:
   vmImage: ubuntu-latest
 
+
+
 steps:
 
 - bash: |
@@ -88,7 +90,7 @@ steps:
       -X POST \
       "https://dev.azure.com/qualica-sbu/TestGERP/_apis/wit/workItems/$BUG_ID/comments?api-version=7.1-preview.3" \
       -H "Content-Type: application/json" \
-      -H "Authorization: Basic $(printf ':%s' "$AZURE_DEVOPS_PAT" | base64 -w 0)" \
+      -H "Authorization: Bearer ${SYSTEM_ACCESSTOKEN}" \
       -d "$COMMENT_BODY"
 
     else
@@ -96,5 +98,8 @@ steps:
         echo "No Chinese detected."
 
     fi
+
+    env:
+      SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     
   displayName: 'Analyze Bug with DevToolBox AI'
