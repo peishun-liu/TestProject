@@ -42,10 +42,6 @@ steps:
         }'
     )
 
-    echo "========================================"
-    echo "Calling DevToolBox AI"
-    echo "========================================"
-
     curl --fail-with-body \
       -sS \
       -X POST \
