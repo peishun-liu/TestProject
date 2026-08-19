@@ -49,12 +49,8 @@ steps:
           以下のJSON形式で返してください。
 
           {
-            \"summary\": \"バグの概要\",
-            \"language\": \"Repro Stepsの言語\",
-            \"is_chinese\": false,
-            \"is_repro_steps_clear\": true,
-            \"missing_information\": [],
-            \"suggested_action\": \"none\"
+            \"has_chinese\": false,
+            \"chinese_Text\": \"中国語の内容\"
           }
 
           ルール：
@@ -63,11 +59,7 @@ steps:
           - 中国語が含まれている場合は is_chinese を true にしてください。
           - 中国語が含まれていない場合は is_chinese を false にしてください。
           - 日本語に含まれる漢字だけでは中国語と判定しないでください。
-          - summaryはバグの概要を簡潔に記述してください。
-          - languageにはRepro Stepsの言語を記述してください。
-          - is_repro_steps_clearはtrueまたはfalseにしてください。
-          - missing_informationは文字列の配列にしてください。
-          - suggested_actionは推奨アクションを記述してください。
+          - chinese_Textは中国語の内容を記述してください。
           - Markdownを使用しないでください。
           - コードブロックを使用しないでください。
           - JSONのみを返してください。
