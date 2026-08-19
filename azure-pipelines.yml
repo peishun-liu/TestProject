@@ -66,4 +66,12 @@ steps:
     echo "========================================"
     cat ai-response.json
 
+    AI_RESULT=$(cat ai-response.json | jq -r '.response')
+    HAS_CHINESE=$(echo "$AI_RESULT" | jq -r '.has_chinese')
+    CHINESE_TEXT=$(echo "$AI_RESULT" | jq -c '.chinese_text')
+
+    echo "Has Chinese: $HAS_CHINESE"
+    echo "Chinese Text: $CHINESE_TEXT"
+    
+
   displayName: 'Analyze Bug with DevToolBox AI'
