@@ -37,8 +37,7 @@ steps:
 
     REQUEST=$(jq -n \
       --arg prompt "あなたはプロフェッショナルなソフトウェアエンジニアです。
-          以下のAzure DevOps Bugを分析してください。
-          Repro Stepsの中に中国語が含まれているか判定してください。
+          以下のAzure DevOps Bugを分析してください。Repro Stepsの中に中国語が含まれているか判定してください。
           Bug ID: $BUG_ID
           Repro Steps:
           $CLEAN_TEXT
