@@ -29,8 +29,8 @@ steps:
 
       Repro Steps：
       $CLEAN_TEXT
-
-      Repro Stepsの中に中国語が含まれているか判定してください。中国語が含まれる場合、Bug IDと\"有中文，请确认\"を返してください。" \
+      
+      " \
         '{
           prompt: $prompt,
           max_tokens: 500
