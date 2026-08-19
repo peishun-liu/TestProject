@@ -48,17 +48,18 @@ steps:
 
       Repro Stepsの中に中国語が含まれているか判定してください。
 
-      回答ルール：
+      重要なルール：
       - Repro Stepsの中に中国語の単語または中国語の文章が1つでも含まれている場合、has_chineseをtrueにしてください。
-      - 中国語を検出した場合、検出した中国語の文字、単語をchinese_textにすべて記載してください。
+      - 中国語を検出した場合、検出した中国語の文字、単語、または文章をchinese_textにすべて記載してください。
       - 中国語が含まれていない場合、has_chineseをfalseにしてください。
       - 中国語が含まれていない場合、chinese_textは空の配列にしてください。
       - 日本語の漢字だけでは中国語と判定しないでください。
       - 日本語と中国語が混在している場合、中国語が1つでも含まれていればhas_chineseはtrueです。
-      - Repro Stepsに存在しない文字列を生成しないでください。
       - has_chineseは必ずtrueまたはfalseにしてください。
       - has_chineseがtrueの場合、chinese_textに検出した中国語を記載してください。
       - has_chineseがfalseの場合、chinese_textは必ず空の配列にしてください。
+      - is_repro_steps_clearは必ずtrueまたはfalseにしてください。
+      - missing_informationは文字列の配列にしてください。
       - JSONのキーは英語のままにしてください。
       - JSONの値は日本語で記述してください。
       - Markdownは使用しないでください。
@@ -69,14 +70,20 @@ steps:
           prompt: $prompt,
           max_tokens: 500
         }'
-      
+
       以下のJSON形式で必ず回答してください。
 
       {
+        \"summary\": \"Bugの概要\",
+        \"language\": \"Repro Stepsの主要な言語\",
         \"has_chinese\": false,
-        \"chinese_text\": []
+        \"chinese_text\": [],
+        \"is_repro_steps_clear\": true,
+        \"missing_information\": [],
+        \"suggested_action\": \"none\"
       }
 
+      
     )
 
     echo "========================================"
