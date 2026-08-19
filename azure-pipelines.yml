@@ -19,6 +19,11 @@ steps:
     REPRO_STEPS='${{ parameters.BugUpdateWebHook.resource.revision.fields['Microsoft.VSTS.TCM.ReproSteps'] }}'
     CLEAN_TEXT=$(printf '%s' "$REPRO_STEPS" | sed 's/<[^>]*>/ /g')
 
+    echo "========================================"
+    echo "入力内容："
+    echo "========================================"
+    echo "$CLEAN_TEXT"
+
     REQUEST=$(jq -n \
       --arg prompt "あなたはプロフェッショナルなソフトウェアエンジニアです。
 
