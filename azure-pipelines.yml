@@ -27,15 +27,26 @@ steps:
     REQUEST=$(jq -n \
       --arg prompt "あなたはプロフェッショナルなソフトウェアエンジニアです。
 
-      Repro Stepsの中に中国語が含まれているか判定してください。
-
       Bug ID：
       $BUG_ID
 
       Repro Steps：
       $CLEAN_TEXT
+
+      Repro Stepsの中に中国語が含まれているか判定してください。
       
-      " \
+      ルール：
+      - 中国語が含まれている場合、has_chineseをtrueにしてください。
+      - 中国語がない場合、chinese_textは空の配列にしてください。
+      
+      必ず以下のJSON形式だけを返してください。
+
+      {
+        \"has_chinese\": false,
+        \"chinese_text\": []
+      }
+
+      JSON以外の文章は絶対に返さないでください" \
         '{
           prompt: $prompt,
           max_tokens: 500
