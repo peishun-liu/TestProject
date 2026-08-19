@@ -22,7 +22,6 @@ steps:
     REQUEST=$(jq -n \
       --arg prompt "あなたはプロフェッショナルなソフトウェアエンジニアです。
 
-      以下のAzure DevOps Bugを分析してください。
       中国語が含まれている場合、responseにhas_chineseにtrueを設定してください。
 
       Bug ID：
