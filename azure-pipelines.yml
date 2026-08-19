@@ -36,7 +36,7 @@ steps:
     echo "$CLEAN_TEXT"
 
     REQUEST=$(jq -n \
-      --arg prompt "あなたはプロフェッショナルなソフトウェアテストエンジニアです。
+      --arg prompt "あなたはプロフェッショナルなソフトウェアエンジニアです。
 
       以下のAzure DevOps Bugを分析してください。
 
