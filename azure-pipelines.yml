@@ -36,24 +36,38 @@ steps:
     echo "$CLEAN_TEXT"
 
     REQUEST=$(jq -n \
-      --arg prompt "You are a professional software QA engineer.
-          Analyze this Azure DevOps Bug.
+      --arg prompt "あなたはプロフェッショナルなソフトウェアエンジニアです。
+          以下のAzure DevOps Bugを分析してください。
           Bug ID: $BUG_ID
           Repro Steps:
           $CLEAN_TEXT
           
-          Please provide:
-          1. A short summary of the bug
-          2. The language of the Repro Steps
-          3. Whether the Repro Steps are clear enough
-          4. Missing information
-          5. Suggested next action
+          以下のJSON形式で返してください。
 
-          Keep the response concise." \
-          '{
-            prompt: $prompt,
-            max_tokens: 500
-          }'
+          {
+            \"summary\": \"バグの概要\",
+            \"language\": \"Repro Stepsの言語\",
+            \"is_repro_steps_clear\": true,
+            \"missing_information\": [],
+            \"suggested_action\": \"none\"
+          }
+
+          ルール：
+          - JSONのキーは英語のままにしてください。
+          - JSONの値は日本語で記述してください。
+          - summaryはバグの概要を簡潔に記述してください。
+          - languageにはRepro Stepsの言語を記述してください。
+          - is_repro_steps_clearはtrueまたはfalseにしてください。
+          - missing_informationは文字列の配列にしてください。
+          - suggested_actionは推奨アクションを記述してください。
+          - Markdownを使用しないでください。
+          - コードブロックを使用しないでください。
+          - JSONのみを返してください。
+          - 回答は簡潔にしてください。" \
+            '{
+              prompt: $prompt,
+              max_tokens: 500
+            }'
         )
 
     echo "========================================"
