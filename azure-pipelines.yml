@@ -36,7 +36,7 @@ steps:
     echo "$CLEAN_TEXT"
 
     REQUEST=$(jq -n \
-      --arg prompt "あなたは自然言語処理の専門家です。
+      --arg prompt "あなたはプロフェッショナルなソフトウェアエンジニアです。
 
       以下のAzure DevOps Bugを分析してください。
 
@@ -66,7 +66,6 @@ steps:
       - has_chineseがtrueの場合、chinese_textに検出した中国語を記載してください。
       - has_chineseがfalseの場合、chinese_textは必ず空の配列にしてください。
       - JSONのキーは英語のままにしてください。
-      - JSONの値は日本語で記述してください。
       - Markdownは使用しないでください。
       - コードブロックは使用しないでください。
       - JSONのみを返してください。
