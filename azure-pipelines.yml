@@ -48,38 +48,13 @@ steps:
           3. Whether the Repro Steps are clear enough
           4. Missing information
           5. Suggested next action
-          
+
           Keep the response concise." \
-          --argjson max_tokens 500 \
           '{
             prompt: $prompt,
-            max_tokens: $max_tokens
-            }'
-          )
-
-          The response MUST use exactly this structure:
-          {
-            \"summary\": \"short summary of the bug\",
-            \"language\": \"language of the Repro Steps\",
-            \"is_repro_steps_clear\": true,
-            \"missing_information\": [],
-            \"suggested_action\": \"none\"
-          }
-
-          Rules:
-          - summary must be a short description of the bug
-          - language should be the language used in Repro Steps
-          - is_repro_steps_clear must be true or false
-          - missing_information must be an array of strings
-          - suggested_action must be a short action identifier
-          - Do not return Markdown
-          - Do not return code fences
-          - Return JSON only." \
-            '{
-              prompt: $prompt,
-              max_tokens: 500
-            }'
-          )
+            max_tokens: 500
+          }'
+        )
 
     echo "========================================"
     echo "Request"
