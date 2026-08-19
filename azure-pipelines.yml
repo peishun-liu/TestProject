@@ -36,7 +36,7 @@ steps:
     echo "$CLEAN_TEXT"
 
     REQUEST=$(jq -n \
-      --arg prompt "あなたはプロフェッショナルなソフトウェアエンジニアです。
+      --arg prompt "あなたは自然言語処理の専門家です。
 
       以下のAzure DevOps Bugを分析してください。
 
