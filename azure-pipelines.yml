@@ -38,6 +38,7 @@ steps:
     REQUEST=$(jq -n \
       --arg prompt "あなたはプロフェッショナルなソフトウェアエンジニアです。
           以下のAzure DevOps Bugを分析してください。
+          Repro Stepsの中に中国語が含まれているか判定してください。
           Bug ID: $BUG_ID
           Repro Steps:
           $CLEAN_TEXT
@@ -47,12 +48,17 @@ steps:
           {
             \"summary\": \"バグの概要\",
             \"language\": \"Repro Stepsの言語\",
+            \"is_chinese\": false,
             \"is_repro_steps_clear\": true,
             \"missing_information\": [],
             \"suggested_action\": \"none\"
           }
 
           ルール：
+          Repro Stepsの中に中国語が含まれているか判定してください。
+          - 中国語が含まれている場合は is_chinese を true にしてください。
+          - 中国語が含まれていない場合は is_chinese を false にしてください。
+          - 日本語に含まれる漢字だけでは中国語と判定しないでください。
           - JSONのキーは英語のままにしてください。
           - JSONの値は日本語で記述してください。
           - summaryはバグの概要を簡潔に記述してください。
