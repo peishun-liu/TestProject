@@ -61,17 +61,40 @@ steps:
       -d "$REQUEST" \
       -o ai-response.json
 
-    echo "========================================"
-    echo "AI Response"
-    echo "========================================"
-    cat ai-response.json
-
     AI_RESULT=$(cat ai-response.json | jq -r '.response')
     HAS_CHINESE=$(echo "$AI_RESULT" | jq -r '.has_chinese')
     CHINESE_TEXT=$(echo "$AI_RESULT" | jq -c '.chinese_text')
 
     echo "Has Chinese: $HAS_CHINESE"
     echo "Chinese Text: $CHINESE_TEXT"
-    
 
+    if [ "$HAS_CHINESE" = "true" ]; then
+
+    echo "Chinese Text:"
+    echo "$CHINESE_TEXT"
+
+    COMMENT="AI检测：Repro Stepsに中国語が含まれています。検出された文字列：$CHINESE_TEXT"
+
+    COMMENT_BODY=$(jq -n \
+      --arg text "$COMMENT" \
+      '{
+        text: $text
+      }')
+
+    echo "Adding comment to Bug $BUG_ID"
+
+    curl --fail-with-body \
+      -sS \
+      -X POST \
+      "https://dev.azure.com/qualica-sbu/TestGERP/_apis/wit/workItems/$BUG_ID/comments?api-version=7.1-preview.3" \
+      -H "Content-Type: application/json" \
+      -H "Authorization: Basic $(printf ':%s' "$AZURE_DEVOPS_PAT" | base64 -w 0)" \
+      -d "$COMMENT_BODY"
+
+    else
+
+        echo "No Chinese detected."
+
+    fi
+    
   displayName: 'Analyze Bug with DevToolBox AI'
