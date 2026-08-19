@@ -46,7 +46,23 @@ steps:
       Repro Steps：
       $CLEAN_TEXT
 
-      Repro Stepsの中に中国語が含まれているか判定してください。" \
+      Repro Stepsの中に中国語が含まれているか判定してください。
+      
+      ルール：
+      - Repro Stepsの中に中国語の単語または中国語の文章が1つでも含まれている場合、has_chineseをtrueにしてください。
+      - 中国語を検出した場合、検出した中国語の文字、単語、または文章をchinese_textにすべて記載してください。
+      - 中国語が含まれていない場合、has_chineseをfalseにしてください。
+      - 中国語が含まれていない場合、chinese_textは空の配列にしてください。
+      - 日本語の漢字だけでは中国語と判定しないでください。
+      - 日本語と中国語が混在している場合、中国語が1つでも含まれていればhas_chineseはtrueです。
+
+      以下のJSON形式で回答してください。
+      {
+        \"has_chinese\": false,
+        \"chinese_text\": []
+      }
+      
+      " \
         '{
           prompt: $prompt,
           max_tokens: 500
