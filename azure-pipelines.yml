@@ -75,29 +75,4 @@ steps:
     echo "Chinese Text:"
     echo "$CHINESE_TEXT"
 
-  #   COMMENT="AI检测：Repro Stepsに中国語が含まれています。検出された文字列：$CHINESE_TEXT"
-
-  #   COMMENT_BODY=$(jq -n \
-  #     --arg text "$COMMENT" \
-  #     '{
-  #       text: $text
-  #     }')
-
-  #   echo "Adding comment to Bug $BUG_ID"
-
-  #   curl --fail-with-body \
-  #     -sS \
-  #     -X POST \
-  #     "https://dev.azure.com/qualica-sbu/TestGERP/_apis/wit/workItems/$BUG_ID/comments?api-version=7.1-preview.3" \
-  #     -H "Content-Type: application/json" \
-  #     -H "Authorization: Bearer ${SYSTEM_ACCESSTOKEN}" \
-  #     -d "$COMMENT_BODY"
-
-  #   else
-
-  #       echo "No Chinese detected."
-
-  #   fi
-  # env:
-  #     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
   displayName: 'Analyze Bug with DevToolBox AI'
