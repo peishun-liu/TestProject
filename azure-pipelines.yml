@@ -32,16 +32,7 @@ steps:
 
       Repro Stepsの中に中国語が含まれているか判定してください。
       
-      以下のJSON形式で回答してください。
-      {
-        \"has_chinese\": false,
-        \"chinese_text\": []
-      }
-
-      ルール：
-      - has_chineseは必ずtrueまたはfalseにしてください。
-      - JSONのみを返してください。
-      - JSON以外の説明は一切追加しないでください。" \
+      JSON形式で回答してください。" \
         '{
           prompt: $prompt,
           max_tokens: 500
