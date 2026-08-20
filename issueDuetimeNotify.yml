@@ -16,6 +16,10 @@ steps:
     ISSUE_ID="${{ parameters.issueCreate.resource.workItemId }}"
     echo "当前处理的 Issue ID: ${ISSUE_ID}"
 
+    echo "====== 【全量字段 JSON 报文开始】 ======"
+    echo '${{ convertToJson(parameters.issueCreate.resource.revision.fields) }}'
+    echo "====== 【全量字段 JSON 报文结束】 ======"
+
     # 2. 兼容解析 Priority（优先级）的值
     PRIORITY='${{ parameters.issueCreate.resource.revision.fields['Microsoft.VSTS.TCM.優先度'] }}'
     echo "检测到当前的优先级为: ${PRIORITY}"
