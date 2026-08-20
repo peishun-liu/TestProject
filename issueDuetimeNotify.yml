@@ -17,7 +17,7 @@ steps:
     echo "当前处理的 Issue ID: ${ISSUE_ID}"
 
     # 2. 兼容解析 Priority（优先级）的值
-    PRIORITY='${{ parameters.issueCreate.resource.revision.fields['Microsoft.VSTS.TCM.Priority'] }}'
+    PRIORITY='${{ parameters.issueCreate.resource.revision.fields['Microsoft.VSTS.TCM.優先度'] }}'
     echo "检测到当前的优先级为: ${PRIORITY}"
 
     # 3. 获取 Issue 的创建日期 (格式通常是 2026-03-31T08:30:00Z)
