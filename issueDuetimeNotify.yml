@@ -15,6 +15,18 @@ steps:
     # 1. 解析 Webhook 传过来的 Issue ID
     ISSUE_ID="${{ parameters.issueCreate.resource.workItemId }}"
     echo "当前处理的 Issue ID: ${ISSUE_ID}"
+
+    # 2. 兼容解析 Priority（优先级）的值
+    PRIORITY="${{parameters.issueCreate.resource.fields.['Microsoft.VSTS.Common.Priority'].newValue}}"
+    # 如果为空（比如是新创建 Issue 事件），则获取当前字段的值
+    if [ -z "${PRIORITY}" ] || [ "${PRIORITY}" == "\$(parameters.issueCreate.resource.fields.['Microsoft.VSTS.Common.Priority'].newValue)" ]; then
+        PRIORITY="${{parameters.issueCreate.resource.fields.['Microsoft.VSTS.Common.Priority']}}"
+    fi
+    echo "检测到当前的优先级为: ${PRIORITY}"
+
+    # 3. 获取 Issue 的创建日期 (格式通常是 2026-03-31T08:30:00Z)
+    CREATED_DATE_STR="${{parameters.issueCreate.resource.fields.['System.CreatedDate']}}"
+    echo "该 Issue 的原始创建日期为: ${CREATED_DATE_STR}"
   displayName: '执行新功能的业务脚本'
   env:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
