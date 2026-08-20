@@ -13,7 +13,7 @@ steps:
 - bash: |
     set -e
     # 1. 解析 Webhook 传过来的 Issue ID
-    ISSUE_ID="$(parameters.issueCreate.resource.workItemId)"
+    ISSUE_ID="${{ parameters.issueCreate.resource.workItemId }}"
     echo "当前处理的 Issue ID: ${ISSUE_ID}"
   displayName: '执行新功能的业务脚本'
   env:
