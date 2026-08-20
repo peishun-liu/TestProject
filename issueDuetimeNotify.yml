@@ -25,7 +25,7 @@ steps:
     echo "检测到当前的优先级为: ${PRIORITY}"
 
     # 3. 获取 Issue 的创建日期 (格式通常是 2026-03-31T08:30:00Z)
-    CREATED_DATE_STR="${{parameters.issueCreate.resource.fields['System.CreatedDate']}}"
+    CREATED_DATE_STR="${{parameters.issueCreate.resource.revision.fields['System.CreatedDate']}}"
     echo "该 Issue 的原始创建日期为: ${CREATED_DATE_STR}"
   displayName: 'Analyze Issue with DevToolBox AI'
   env:
