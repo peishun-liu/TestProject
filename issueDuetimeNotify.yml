@@ -1,0 +1,38 @@
+trigger: none # 禁用代码提交触发，完全交由 Webhook 触发
+
+# 核心：绑定第一步创建的专属 Service Connection
+resources:
+  webhooks:
+    - webhook: issueCreate
+      connection: IssueConn # 必须与第一步的名字完全一致
+
+pool:
+  vmImage: 'ubuntu-latest' # 使用轻量 Linux 极速开机
+
+steps:
+- bash: |
+    set -e
+    # 1. 解析 Webhook 传过来的 Issue ID
+    ISSUE_ID="$(parameters.IssueWebhook.resource.id)"
+    echo "当前处理的 Issue ID: ${ISSUE_ID}"
+
+    # 2. 兼容解析 Priority（优先级）的值
+    PRIORITY="$(parameters.IssueWebhook.resource.fields.['Microsoft.VSTS.Common.Priority'].newValue)"
+    # 如果为空（比如是新创建 Issue 事件），则获取当前字段的值
+    if [ -z "${PRIORITY}" ] || [ "${PRIORITY}" == "\$(parameters.IssueWebhook.resource.fields.['Microsoft.VSTS.Common.Priority'].newValue)" ]; then
+        PRIORITY="$(parameters.IssueWebhook.resource.fields.['Microsoft.VSTS.Common.Priority'])"
+    fi
+    echo "检测到当前的优先级为: ${PRIORITY}"
+
+    # 3. 获取 Issue 的创建日期 (格式通常是 2026-03-31T08:30:00Z)
+    CREATED_DATE_STR="$(parameters.IssueWebhook.resource.fields.['System.CreatedDate'])"
+    echo "该 Issue 的原始创建日期为: ${CREATED_DATE_STR}"
+
+    # 4. 健壮性检查：如果必要数据缺失，直接安全退出
+    if [ -z "${PRIORITY}" ] || [ -z "${CREATED_DATE_STR}" ] || [ "${CREATED_DATE_STR}" == "\$(parameters.IssueWebhook.resource.fields.['System.CreatedDate'])" ]; then
+        echo "必要的数据字段缺失，跳过截止日期计算。"
+        exit 0
+    fi
+  displayName: '执行新功能的业务脚本'
+  env:
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
