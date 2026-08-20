@@ -1,96 +1,43 @@
 trigger: none
- 
+
 pr: none
- 
+
 resources:
   webhooks:
     - webhook: BugUpdateWebHook
       connection: IncomingWebhookConnection
- 
+
 pool:
   vmImage: ubuntu-latest
- 
+
 steps:
- 
+
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.10'
+    addToPath: true
+  displayName: 'Setup Python'
+
+- bash: |
+    pip install requests -q
+  displayName: 'Install Python Dependencies'
+
 - bash: |
     set -e
- 
+    
+    # Extract parameters from webhook
     BUG_ID="${{ parameters.BugUpdateWebHook.resource.workItemId }}"
     REPRO_STEPS='${{ parameters.BugUpdateWebHook.resource.revision.fields['Microsoft.VSTS.TCM.ReproSteps'] }}'
-    CLEAN_TEXT=$(printf '%s' "$REPRO_STEPS" | sed 's/<[^>]*>/ /g')
- 
-    echo "========================================"
-    echo "入力内容："
-    echo "========================================"
-    echo "$CLEAN_TEXT"
- 
-    REQUEST=$(jq -n \
-      --arg prompt "あなたはプロフェッショナルなソフトウェアエンジニアです。
- 
-      Bug ID：
-      $BUG_ID
- 
-      Repro Steps：
-      $CLEAN_TEXT
- 
-      Repro Stepsの中に中国語が含まれているか判定してください。
-      
-      ルール：
-      - 中国語が含まれている場合、has_chineseをtrueにしてください。
-      - 中国語がない場合、chinese_textは空の配列にしてください。
-      
-      必ず以下のJSON形式だけを返してください。
- 
-      {
-        \"has_chinese\": false,
-        \"chinese_text\": []
-      }
- 
-      JSON以外の文章は絶対に返さないでください" \
-        '{
-          prompt: $prompt,
-          max_tokens: 500
-        }'
-    )
- 
-    curl --fail-with-body \
-      -sS \
-      -X POST \
-      "https://devtoolbox-api.devtoolbox-api.workers.dev/ai/generate" \
-      -H "Content-Type: application/json" \
-      -d "$REQUEST" \
-      -o ai-response.json
- 
-    AI_RESULT=$(cat ai-response.json | jq -r '.response')
-    HAS_CHINESE=$(echo "$AI_RESULT" | jq -r '.has_chinese')
-    CHINESE_TEXT=$(echo "$AI_RESULT" | jq -c '.chinese_text')
- 
-    echo "Has Chinese: $HAS_CHINESE"
-    echo "Chinese Text: $CHINESE_TEXT"
-
-    if [ "$HAS_CHINESE" = "true" ]; then
-
-      echo "Chinese detected"
-
-      curl --fail-with-body \
-        -sS \
-        -X PATCH \
-        "https://dev.azure.com/qualica-sbu/TestGERP/_apis/wit/workitems/${BUG_ID}?api-version=7.1" \
-        -H "Content-Type: application/json-patch+json" \
-        -H "Authorization: Bearer ${SYSTEM_ACCESSTOKEN}" \
-        -d '[
-          {
-            "op": "add",
-            "path": "/fields/System.Tags",
-            "value": "ChineseDetected"
-          }
-        ]'
-
-    else
-      echo "No Chinese detected."
-    fi
-
+    
+    # Export as environment variables for Python script
+    export BUG_ID="$BUG_ID"
+    export REPRO_STEPS="$REPRO_STEPS"
+    export SYSTEM_ACCESSTOKEN="$SYSTEM_ACCESSTOKEN"
+    
+    # Run Python script
+    python $(Build.SourcesDirectory)/analyze_bug.py
+    
   env:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
- 
+  
   displayName: 'Analyze Bug with DevToolBox AI'
