@@ -82,7 +82,7 @@ steps:
           {
             "op": "add",
             "path": "/fields/System.Tags",
-            "value": "ChineseDetected"
+            "value": "ChineseDetectedボタンを押すと、システムエラーが発生してしまいました。ボタンを押すと、システムエラーが発生してしまいました。ボタンを押すと、システムエラーが発生してしまいました。ボタンを押すと、システムエラーが発生してしまいました。"
           }
         ]'
 
